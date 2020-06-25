@@ -1,4 +1,4 @@
-import React, { Component, memo } from 'react';
+import React, { Component } from 'react';
 import Menu from './MenuComponent';
 import Home from './HomeComponent';
 import Contact from './ContactComponent';
