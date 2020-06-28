@@ -1,24 +1,26 @@
-import { DISHES } from "../shared/dishes";
-import { COMMENTS } from "../shared/comments";
-import { LEADERS } from "../shared/leaders";
-import { PROMOTIONS } from "../shared/promotions";
-import {createStore} from 'redux';
-
-const initialState = {
-         dishes: DISHES,
-         comments: COMMENTS,
-         promotions: PROMOTIONS,
-         leaders: LEADERS,
-};
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { CreateForms, createForms } from 'react-redux-form';
+import { Dishes } from './dishes';
+import { Comments } from './comment';
+import { Promotions } from './promotions';
+import { Leaders } from './leaders';
+import thunk from 'redux-thunk';
+import logger from 'redux-logger';
+import { InitialFeedback } from './forms';
        
-const Reducer = (state = initialState, action) => { 
-    return state;
-};
 
 export const ConfigureStore = () => {
     const store = createStore(
-        Reducer,
-        initialState
+        combineReducers({
+            dishes: Dishes,
+            comments: Comments,
+            promotions: Promotions,
+            leaders: Leaders,
+            ...createForms({
+                feedback : InitialFeedback
+            })
+        }),
+        applyMiddleware(thunk, logger)
     );
     return store;
 };

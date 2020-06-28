@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import { Card, CardImg, CardText, CardBody, CardTitle, BreadcrumbItem, Breadcrumb, Modal, ModalBody, ModalHeader, Label,Button,Col,Row, FormGroup} from 'reactstrap';
+import { Card, CardImg, CardText, CardBody, CardTitle, BreadcrumbItem, Breadcrumb, Modal, ModalBody, ModalHeader, Label,Button,FormGroup} from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { Control, LocalForm, Errors } from 'react-redux-form';
+import { Loading } from './LoadingComponent';
 
 const minLength = (len) => (val) => val && val.length >= len;
 const maxLength = (len) => (val) => !val || val.length <= len;
@@ -19,9 +20,8 @@ class CommentForm extends Component{
     }
 
     handleSubmit(values) {
-        console.log(JSON.stringify(values));
-        alert(JSON.stringify(values));
         this.toggleModal();
+        this.props.addComment(this.props.dishId, values.author, values.rating, values.comment)
     }
 
     toggleModal() {
@@ -67,7 +67,8 @@ class CommentForm extends Component{
                                     show="touched"
                                     messages={{
                                         required: "Required ",
-                                        minLength: "Must be greater than 2 "
+                                        minLength: "Must be greater than 2 characters",
+                                        maxLength : "Must be less than 15 characters"
                                     }}
                                 />
                             </FormGroup>
@@ -105,7 +106,7 @@ function RenderDish({ dish }) {
     );
 }
 
-function RenderComments({ comments }) {
+function RenderComments({ comments, addComment, dishId }) {
     if (comments) {
         return (
             <div className="col-12 col-md-5 m-1">
@@ -120,14 +121,31 @@ function RenderComments({ comments }) {
                         );
                     })}
                 </ul>
-                <CommentForm/>
+                <CommentForm addComment={addComment} dishId={dishId}/>
             </div>
         )
     }
 }
 
 const DishDetail = (props) => {
-    if (props.dish) {
+    if (props.isLoading) {
+        return (
+          <div className="container">
+            <div className="row">
+              <Loading />
+            </div>
+          </div>
+        );
+    }
+    else if (props.errMsg) {
+         return (<div className="container">
+          <div className="row">
+                <h4>{props.errMsg}</h4>
+          </div>
+         </div>
+         );
+    }
+    else if (props.dish) {
         return (
             <div className="container">
                 <div className="row">
@@ -141,8 +159,11 @@ const DishDetail = (props) => {
                     </div>
                 </div>
                 <div className="row">
-                        <RenderDish dish={props.dish} />
-                        <RenderComments comments={props.comments} />
+                    <RenderDish dish={props.dish} />
+                    <RenderComments comments={props.comments}
+                        addComment={props.addComment}
+                        dishId={props.dish.id}
+                    />
                 </div>
             </div>
         );
