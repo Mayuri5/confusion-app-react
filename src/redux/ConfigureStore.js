@@ -1,5 +1,5 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
-import { CreateForms, createForms } from 'react-redux-form';
+import { createForms } from 'react-redux-form';
 import { Dishes } from './dishes';
 import { Comments } from './comment';
 import { Promotions } from './promotions';
