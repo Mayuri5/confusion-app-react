@@ -18,6 +18,7 @@ class Contact extends Component {
   }
 
   handleSubmit(values) {
+    this.props.resetFeedbackForm();
     this.props.postFeedback(
       values.firstname,
       values.lastname,
@@ -27,7 +28,6 @@ class Contact extends Component {
       values.contactType,
       values.message
     );
-    this.props.resetFeedbackForm();
   }
 
   render() {

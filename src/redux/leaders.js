@@ -29,4 +29,4 @@ export const Leaders = (
                  };
              default: return state;
          }
-       };
+};
